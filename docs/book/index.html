@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samanvaya: An Interlingua for Unity of Indian Languages — Book</title>
+<meta name="description" content="Samanvaya: An Interlingua for Unity of Indian Languages - a groundbreaking work bridging diverse Indian languages through computational linguistics.">
+<meta name="keywords" content="Samanvaya, interlingua, Indian languages, Sanskrit, NLP, linguistics, translation">
+<meta name="author" content="Chaitali Dangarikar, Arnab Bhattacharya, Karthika N J, Hrishikesh Terdalkar, Pramit Bhattacharyya, Annarao Kulkarni, Chaitanya S Lakkundi, Ganesh Ramakrishnan, Shivani V">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink: #241b14;
+    --ink-soft: #5a4c3c;
+    --ink-faint: #8a7a63;
+    --paper: #f1e9d6;
+    --paper-raised: #e8dcbe;
+    --paper-hero: #ecdfc0;
+    --paper-hero-text: var(--ink);
+    --rule: #cdb98a;
+    --maroon: #8a2432;
+    --maroon-soft: #a83c46;
+    --indigo: #2c3a56;
+    --indigo-soft: #4a5c82;
+    --gold: #9c711a;
+    --shadow: 0 1px 2px rgba(36,27,20,.06), 0 8px 24px -12px rgba(36,27,20,.18);
+    --font-display: "Fraunces", "Source Serif 4", Georgia, serif;
+    --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink: #ecdfc4;
+      --ink-soft: #c1b193;
+      --ink-faint: #8d7f66;
+      --paper: #171208;
+      --paper-raised: #221a10;
+      --paper-hero: #332818;
+      --paper-hero-text: var(--ink);
+      --rule: #3c3220;
+      --maroon: #e0838c;
+      --maroon-soft: #eda6ac;
+      --indigo: #93a6cf;
+      --indigo-soft: #b4c2e0;
+      --gold: #dcac52;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink: #ecdfc4;
+    --ink-soft: #c1b193;
+    --ink-faint: #8d7f66;
+    --paper: #171208;
+    --paper-raised: #221a10;
+    --paper-hero: #332818;
+    --paper-hero-text: var(--ink);
+    --rule: #3c3220;
+    --maroon: #e0838c;
+    --maroon-soft: #eda6ac;
+    --indigo: #93a6cf;
+    --indigo-soft: #b4c2e0;
+    --gold: #dcac52;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.03rem;
+    line-height: 1.7;
+  }
+  a{ color: var(--maroon); text-decoration-color: rgba(138,36,50,.35); }
+  a:hover{ color: var(--maroon-soft); }
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: .74rem;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1, h2, h5, h6, .display{
+    font-family: var(--font-display);
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  h2{
+    font-weight: 600;
+    font-size: clamp(1.4rem, 1.15rem + 1vw, 1.9rem);
+    margin-bottom: .9rem;
+  }
+  .content-col{ max-width: 900px; margin: 0 auto; }
+
+  /* Navbar */
+  .site-nav{
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-nav .brand{
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: .01em;
+  }
+  .site-nav .brand .devanagari{
+    font-family: "Noto Serif Devanagari", serif;
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+    margin-left: .5rem;
+  }
+  .site-nav .nav-link{
+    color: var(--ink-soft);
+    font-size: .88rem;
+    font-weight: 600;
+  }
+  .site-nav .nav-link:hover{ color: var(--maroon); }
+
+  /* Hero */
+  .hero{
+    background: var(--paper-hero);
+    color: var(--paper-hero-text);
+    padding: 3.5rem 0 3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .eyebrow{ margin-bottom: .8rem; }
+  .hero h1{
+    font-size: clamp(1.9rem, 1.5rem + 2vw, 2.7rem);
+    font-weight: 700;
+    color: var(--paper-hero-text);
+    line-height: 1.15;
+    margin-bottom: 1.4rem;
+  }
+
+  /* Buttons */
+  .btn-brand{
+    background: var(--maroon);
+    border: 1px solid var(--maroon);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: .88rem;
+    border-radius: 3px;
+  }
+  .btn-brand:hover{ background: var(--maroon-soft); border-color: var(--maroon-soft); color: var(--paper); }
+  .btn-brand-outline{
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: .88rem;
+    border-radius: 3px;
+  }
+  .btn-brand-outline:hover{ border-color: var(--indigo); color: var(--indigo); }
+  .btn-brand-indigo{
+    background: transparent;
+    border: 1px solid var(--indigo);
+    color: var(--indigo);
+    font-weight: 600;
+    font-size: .88rem;
+    border-radius: 3px;
+  }
+  .btn-brand-indigo:hover{ background: var(--indigo); color: var(--paper); }
+
+  /* Sections */
+  section{ padding: 3.2rem 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type{ border-bottom: none; }
+  .lead{ color: var(--ink-soft); max-width: 68ch; }
+
+  .alert-brand{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    color: var(--ink);
+  }
+  .alert-brand a{ color: var(--maroon); font-weight: 600; }
+
+  .book-table{ border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .book-table th, .book-table td{
+    padding: .75rem 1rem;
+    border-color: var(--rule) !important;
+    color: var(--ink);
+  }
+  .book-table th{ color: var(--ink-faint); font-weight: 600; width: 220px; background: var(--paper-raised); }
+
+  .author-card{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    font-weight: 600;
+  }
+  .author-card a{ color: var(--ink); }
+  .author-card a:hover{ color: var(--maroon); }
+
+  .track-badge{
+    display: inline-block;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--indigo);
+    background: transparent;
+    border: 1px solid var(--indigo);
+    border-radius: 2px;
+    padding: .28rem .65rem;
+    margin: .2rem .4rem .2rem 0;
+  }
+
+  /* Modals */
+  .modal-content{
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  .modal-header, .modal-footer{ border-color: var(--rule); }
+  .modal-title{ font-family: var(--font-display); font-weight: 600; }
+  .btn-close{ filter: none; }
+  :root:not([data-theme="light"]) .btn-close,
+  :root[data-theme="dark"] .btn-close{ filter: invert(1) grayscale(1); }
+
+  .citation-box{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre-wrap;
+    font-size: .84rem;
+    color: var(--ink);
+  }
+  .btn-copy{
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-soft);
+    font-size: .78rem;
+    border-radius: 3px;
+  }
+  .btn-copy:hover{ border-color: var(--maroon); color: var(--maroon); }
+
+  footer{
+    background: var(--paper-hero);
+    color: var(--ink-faint);
+    padding: 2.4rem 0;
+    font-size: .87rem;
+    border-top: 1px solid var(--rule);
+  }
+  footer a{ color: var(--gold); }
+  footer a:hover{ color: var(--maroon); }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md site-nav sticky-top py-2">
+  <div class="container content-col">
+    <a class="navbar-brand brand" href="../index.html">&larr; Samanvaya <span class="devanagari">समन्वय</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container content-col">
+    <p class="eyebrow">The Book</p>
+    <h1>Samanvaya: An Interlingua for Unity of Indian Languages</h1>
+
+    <div class="mb-0">
+      <a href="sample.pdf" class="btn btn-brand me-2 mb-2" target="_blank">View Sample PDF</a>
+      <a href="cover.pdf" class="btn btn-brand-outline me-2 mb-2" target="_blank">View Book Cover</a>
+      <button type="button" class="btn btn-brand-outline me-2 mb-2" data-bs-toggle="modal" data-bs-target="#requestModal">Request a Copy</button>
+      <button type="button" class="btn btn-brand-indigo mb-2" data-bs-toggle="modal" data-bs-target="#citeModal">Cite This Book</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container content-col">
+
+    <section id="about">
+      <p class="eyebrow">About the Book</p>
+      <h2>A bridge language for Indian languages</h2>
+      <p class="lead">
+        Interlingua serves as a constructed bridge language, designed to simplify communication and analysis across diverse natural languages by identifying commonalities in structure and meaning. <strong>Samanvaya</strong>, our proposed interlingua for Indian languages, embodies this principle by unifying linguistic features shared across these languages, facilitating deeper linguistic analysis and cross-lingual understanding while preserving their unique cultural identities.
+      </p>
+    </section>
+
+    <section id="purchase">
+      <p class="eyebrow">Availability</p>
+      <h2>How to Purchase</h2>
+      <div class="alert-brand p-3">
+        <h5 class="mb-2">Purchase via Email</h5>
+        <p class="mb-2">To purchase a copy of this book, please send an email to <a href="mailto:sales@csu.co.in">sales@csu.co.in</a> with the following information:</p>
+        <ul class="mb-0">
+          <li>Number of copies required</li>
+          <li>Your complete postal address</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="details">
+      <p class="eyebrow">Details</p>
+      <h2>Book Information</h2>
+      <table class="table book-table mb-0">
+        <tbody>
+          <tr>
+            <th>Publisher</th>
+            <td>Central Sanskrit University, India</td>
+          </tr>
+          <tr>
+            <th>Publication Date</th>
+            <td>October 2024</td>
+          </tr>
+          <tr>
+            <th>ISBN</th>
+            <td>978-93-48435-21-7</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="authors">
+      <p class="eyebrow">Contributors</p>
+      <h2>Authors</h2>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        <div class="col"><div class="author-card"><a href="https://www.linkedin.com/in/chaitali-dangarikar-a3505623a/" target="_blank">Chaitali Dangarikar</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://www.cse.iitk.ac.in/users/arnabb/" target="_blank">Arnab Bhattacharya</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://www.linkedin.com/in/karthika-n-j/" target="_blank">Karthika N J</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://hrishikeshrt.github.io" target="_blank">Hrishikesh Terdalkar</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://www.linkedin.com/in/pramit-bhattacharyya-9a4060122/" target="_blank">Pramit Bhattacharyya</a></div></div>
+        <div class="col"><div class="author-card"><a href="#" target="_blank">Annarao Kulkarni</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://github.com/chaitanya-lakkundi" target="_blank">Chaitanya S Lakkundi</a></div></div>
+        <div class="col"><div class="author-card"><a href="https://www.cse.iitb.ac.in/~ganesh/" target="_blank">Ganesh Ramakrishnan</a></div></div>
+        <div class="col"><div class="author-card"><a href="#" target="_blank">Shivani V</a></div></div>
+      </div>
+    </section>
+
+    <section id="topics">
+      <p class="eyebrow">Scope</p>
+      <h2>Topics &amp; Keywords</h2>
+      <div>
+        <span class="track-badge">Indian Languages</span>
+        <span class="track-badge">Computational Linguistics</span>
+        <span class="track-badge">Natural Language Processing</span>
+        <span class="track-badge">Interlingua</span>
+        <span class="track-badge">Sanskrit</span>
+        <span class="track-badge">Hindi</span>
+        <span class="track-badge">Marathi</span>
+        <span class="track-badge">Bengali</span>
+        <span class="track-badge">Kannada</span>
+        <span class="track-badge">Malayalam</span>
+        <span class="track-badge">Annotation</span>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- Request Copy Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="requestModalLabel">Request a Copy</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>To request a copy of <strong>Samanvaya: An Interlingua for Unity of Indian Languages</strong>, please fill out the form below:</p>
+        <p class="text-center">
+          <a href="https://forms.gle/oWDetPVukDwsZe2w5" class="btn btn-brand" target="_blank">Open Request Form</a>
+        </p>
+        <hr style="border-color: var(--rule);">
+        <p><strong>Alternatively, you can purchase via email:</strong></p>
+        <p>Send an email to <a href="mailto:sales@csu.co.in">sales@csu.co.in</a> with:</p>
+        <ul>
+          <li>Number of copies required</li>
+          <li>Your complete postal address</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Citation Modal -->
+<div class="modal fade" id="citeModal" tabindex="-1" aria-labelledby="citeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="citeModalLabel">Cite This Book</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6>BibTeX</h6>
+        <div class="citation-box" id="bibtex-citation">@book{samanvaya2024,
+  title        = {Samanvaya: An Interlingua for Unity of Indian Languages},
+  author       = {Dangarikar, Chaitali and Bhattacharya, Arnab and N J, Karthika and Terdalkar, Hrishikesh and Bhattacharyya, Pramit and Kulkarni, Annarao and Lakkundi, Chaitanya S and Ramakrishnan, Ganesh and V, Shivani},
+  year         = 2024,
+  month        = oct,
+  publisher    = {Central Sanskrit University},
+  address      = {India},
+  isbn         = {978-93-48435-21-7}
+}</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('bibtex-citation')">Copy BibTeX</button>
+
+        <h6 class="mt-4">IEEE</h6>
+        <div class="citation-box" id="ieee-citation">C. Dangarikar, A. Bhattacharya, K. N J, H. Terdalkar, P. Bhattacharyya, A. Kulkarni, C. S. Lakkundi, G. Ramakrishnan, and S. V, Samanvaya: An Interlingua for Unity of Indian Languages. India: Central Sanskrit University, 2024.</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('ieee-citation')">Copy IEEE</button>
+
+        <h6 class="mt-4">APA 7th Edition</h6>
+        <div class="citation-box" id="apa-citation">Dangarikar, C., Bhattacharya, A., N J, K., Terdalkar, H., Bhattacharyya, P., Kulkarni, A., Lakkundi, C. S., Ramakrishnan, G., &amp; V, S. (2024). Samanvaya: An interlingua for unity of Indian languages. Central Sanskrit University.</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('apa-citation')">Copy APA</button>
+
+        <h6 class="mt-4">Chicago (Author-Date)</h6>
+        <div class="citation-box" id="chicago-citation">Dangarikar, Chaitali, Arnab Bhattacharya, Karthika N J, Hrishikesh Terdalkar, Pramit Bhattacharyya, Annarao Kulkarni, Chaitanya S Lakkundi, Ganesh Ramakrishnan, and Shivani V. 2024. Samanvaya: An Interlingua for Unity of Indian Languages. India: Central Sanskrit University.</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('chicago-citation')">Copy Chicago</button>
+
+        <h6 class="mt-4">MLA 9th Edition</h6>
+        <div class="citation-box" id="mla-citation">Dangarikar, Chaitali, Arnab Bhattacharya, Karthika N J, Hrishikesh Terdalkar, Pramit Bhattacharyya, Annarao Kulkarni, Chaitanya S Lakkundi, Ganesh Ramakrishnan, and Shivani V. Samanvaya: An Interlingua for Unity of Indian Languages. Central Sanskrit University, 2024.</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('mla-citation')">Copy MLA</button>
+
+        <h6 class="mt-4">Harvard</h6>
+        <div class="citation-box" id="harvard-citation">Dangarikar, C., Bhattacharya, A., N J, K., Terdalkar, H., Bhattacharyya, P., Kulkarni, A., Lakkundi, C.S., Ramakrishnan, G. and V, S., 2024. Samanvaya: An interlingua for unity of Indian languages. India: Central Sanskrit University.</div>
+        <button class="btn btn-copy mt-2" onclick="copyToClipboard('harvard-citation')">Copy Harvard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container content-col text-center">
+    <p class="mb-0">&copy; 2024&ndash;2026, All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    const text = element.textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      alert('Citation copied to clipboard!');
+    }, function(err) {
+      console.error('Could not copy text: ', err);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samanvaya — ICON 2026 Tutorial</title>
+<meta name="description" content="Samanvaya: a unified, grammar-aware framework for creating and annotating multilingual Indian-language corpora. A tutorial at ICON 2026.">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@500;600&family=Noto+Serif+Bengali:wght@500;600&family=Noto+Serif+Kannada:wght@500;600&family=Noto+Serif+Malayalam:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink: #241b14;
+    --ink-soft: #5a4c3c;
+    --ink-faint: #8a7a63;
+    --paper: #f1e9d6;
+    --paper-raised: #e8dcbe;
+    --paper-hero: #ecdfc0;
+    --paper-hero-text: var(--ink);
+    --rule: #cdb98a;
+    --maroon: #8a2432;
+    --maroon-soft: #a83c46;
+    --indigo: #2c3a56;
+    --indigo-soft: #4a5c82;
+    --gold: #9c711a;
+    --shadow: 0 1px 2px rgba(36,27,20,.06), 0 8px 24px -12px rgba(36,27,20,.18);
+    --font-display: "Fraunces", "Source Serif 4", Georgia, serif;
+    --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink: #ecdfc4;
+      --ink-soft: #c1b193;
+      --ink-faint: #8d7f66;
+      --paper: #171208;
+      --paper-raised: #221a10;
+      --paper-hero: #332818;
+      --paper-hero-text: var(--ink);
+      --rule: #3c3220;
+      --maroon: #e0838c;
+      --maroon-soft: #eda6ac;
+      --indigo: #93a6cf;
+      --indigo-soft: #b4c2e0;
+      --gold: #dcac52;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink: #ecdfc4;
+    --ink-soft: #c1b193;
+    --ink-faint: #8d7f66;
+    --paper: #171208;
+    --paper-raised: #221a10;
+    --paper-hero: #332818;
+    --paper-hero-text: var(--ink);
+    --rule: #3c3220;
+    --maroon: #e0838c;
+    --maroon-soft: #eda6ac;
+    --indigo: #93a6cf;
+    --indigo-soft: #b4c2e0;
+    --gold: #dcac52;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.03rem;
+    line-height: 1.7;
+  }
+  a{ color: var(--maroon); text-decoration-color: rgba(138,36,50,.35); }
+  a:hover{ color: var(--maroon-soft); }
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: .74rem;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  h1, h2, h3, .display{
+    font-family: var(--font-display);
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  h2{
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+    margin-bottom: .35rem;
+  }
+  .section-lede{
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin-bottom: 2rem;
+  }
+  .measure{ max-width: 68ch; }
+  .content-col{ max-width: 900px; margin: 0 auto; }
+
+  /* Navbar */
+  .site-nav{
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-nav .brand{
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: .01em;
+  }
+  .site-nav .nav-link{
+    color: var(--ink-soft);
+    font-size: .88rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .site-nav .nav-link:hover{ color: var(--maroon); }
+
+  /* Hero */
+  .hero{
+    background: var(--paper-hero);
+    color: var(--paper-hero-text);
+    padding: 4.5rem 0 3.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .script-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    margin-bottom: 1.6rem;
+  }
+  .script-chip{
+    font-size: 1.05rem;
+    padding: .3rem .75rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    color: var(--gold);
+    background: transparent;
+  }
+  .script-chip .deva{ font-family: "Noto Serif Devanagari", serif; }
+  .script-chip .beng{ font-family: "Noto Serif Bengali", serif; }
+  .script-chip .kan{ font-family: "Noto Serif Kannada", serif; }
+  .script-chip .mal{ font-family: "Noto Serif Malayalam", serif; }
+
+  .hero h1{
+    font-size: clamp(2.6rem, 2rem + 3vw, 4.2rem);
+    font-weight: 700;
+    color: var(--paper-hero-text);
+    line-height: 1.02;
+    margin-bottom: .25rem;
+  }
+  .hero .devanagari-title{
+    font-family: "Noto Serif Devanagari", serif;
+    font-weight: 600;
+    font-size: clamp(1.6rem, 1.3rem + 1.3vw, 2.3rem);
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .hero .subtitle{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem);
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin-bottom: 1.1rem;
+  }
+  .hero .lede{
+    max-width: 60ch;
+    color: var(--ink-soft);
+    margin-bottom: 2.1rem;
+  }
+  .stat-strip{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+  .stat{
+    padding: 0 1.6rem 0 0;
+    margin-right: 1.6rem;
+    border-right: 1px solid var(--rule);
+  }
+  .stat:last-child{ border-right: none; }
+  .stat .num{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: var(--paper-hero-text);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .stat .label{
+    font-size: .74rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .byline{
+    margin-top: 1.8rem;
+    font-size: .88rem;
+    color: var(--ink-faint);
+  }
+  .byline strong{ color: var(--ink-soft); font-weight: 600; }
+
+  /* Sections */
+  section{ padding: 4rem 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type{ border-bottom: none; }
+
+  .drop-cite{
+    font-size: .84rem;
+    color: var(--ink-faint);
+    border-left: 2px solid var(--gold);
+    padding-left: .8rem;
+    margin-top: 1.4rem;
+  }
+
+  .track-badge{
+    display: inline-block;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--indigo);
+    background: transparent;
+    border: 1px solid var(--indigo);
+    border-radius: 2px;
+    padding: .28rem .65rem;
+    margin: .2rem .4rem .2rem 0;
+  }
+
+  /* Session cards */
+  .session-card{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.6rem 1.7rem;
+    height: 100%;
+    box-shadow: var(--shadow);
+  }
+  .session-card .session-no{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--maroon);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .session-card .session-dur{
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .session-card h3{
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: .6rem 0 .55rem;
+    line-height: 1.3;
+  }
+  .session-card p{
+    font-size: .93rem;
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+  .session-total{
+    font-size: .85rem;
+    color: var(--ink-faint);
+    margin-top: 1.6rem;
+  }
+
+  /* Language mosaic */
+  .lang-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .lang-tile{
+    background: var(--paper-raised);
+    padding: 1.9rem 1.2rem;
+    text-align: center;
+  }
+  .lang-tile .script{
+    font-size: 2rem;
+    color: var(--maroon);
+    display: block;
+    margin-bottom: .6rem;
+  }
+  .lang-tile .deva{ font-family: "Noto Serif Devanagari", serif; font-weight: 600; }
+  .lang-tile .beng{ font-family: "Noto Serif Bengali", serif; font-weight: 600; }
+  .lang-tile .kan{ font-family: "Noto Serif Kannada", serif; font-weight: 600; }
+  .lang-tile .mal{ font-family: "Noto Serif Malayalam", serif; font-weight: 600; }
+  .lang-tile .langs{
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  /* Organizers */
+  .org-card{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.5rem;
+    height: 100%;
+  }
+  .org-card h3{
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: .1rem;
+  }
+  .org-card .affil{
+    font-size: .82rem;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: .6rem;
+    display: block;
+  }
+  .org-card p{
+    font-size: .87rem;
+    color: var(--ink-soft);
+    margin-bottom: .8rem;
+  }
+  .org-card .links a{
+    font-size: .82rem;
+    font-weight: 600;
+    margin-right: 1rem;
+  }
+
+  /* Contributors */
+  .contributor-card{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: .9rem 1.1rem;
+    height: 100%;
+  }
+  .contributor-card .name{
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: block;
+  }
+  .contributor-card .affil{
+    font-size: .8rem;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: .1rem;
+  }
+  .contributor-card .links{
+    margin-top: .5rem;
+  }
+  .contributor-card .links a{
+    font-size: .8rem;
+    font-weight: 600;
+  }
+  .contributors-sub{
+    margin-top: 2.2rem;
+    padding-top: 1.6rem;
+    border-top: 1px dashed var(--rule);
+  }
+  .sub-label{
+    font-size: .82rem;
+    color: var(--ink-faint);
+    margin-bottom: 1rem;
+  }
+
+  footer{
+    background: var(--paper-hero);
+    color: var(--ink-faint);
+    padding: 3rem 0 2.2rem;
+    font-size: .87rem;
+    border-top: 1px solid var(--rule);
+  }
+  footer .drop-cite{
+    color: var(--ink-faint);
+    border-left-color: var(--gold);
+  }
+  footer a{ color: var(--gold); }
+  footer a:hover{ color: var(--maroon); }
+  footer .foot-tracks{ margin-top: 1.4rem; font-size: .82rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md site-nav sticky-top py-2">
+  <div class="container content-col">
+    <a class="navbar-brand brand" href="#top">Samanvaya @ ICON 2026</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav gap-md-3">
+        <li class="nav-item"><a class="nav-link" href="#motivation">Motivation</a></li>
+        <li class="nav-item"><a class="nav-link" href="#fit">Relevance</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sessions">Sessions</a></li>
+        <li class="nav-item"><a class="nav-link" href="#languages">Languages</a></li>
+        <li class="nav-item"><a class="nav-link" href="#organizers">Organizers</a></li>
+        <li class="nav-item"><a class="nav-link" href="book/">Book</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container content-col">
+    <p class="eyebrow mb-3">ICON 2026 &middot; Tutorial &middot; 2.5&ndash;3 Hours</p>
+
+    <div class="script-row" aria-hidden="true">
+      <span class="script-chip"><span class="deva">समन्वय</span></span>
+      <span class="script-chip"><span class="beng">সমন্বয়</span></span>
+      <span class="script-chip"><span class="kan">ಸಮನ್ವಯ</span></span>
+      <span class="script-chip"><span class="mal">സമന്വയം</span></span>
+    </div>
+
+    <h1>Samanvaya</h1>
+    <p class="subtitle">Building Grammar-Aware Resources and Annotation Standards for Indian Languages</p>
+    <p class="lede">A unified, grammar-aware framework and tagging system for creating and annotating multilingual corpora across Indian languages — preserving the morphology, honorifics, evidentiality, and <em>kāraka</em> relations that whitespace tokenization and generic annotation schemes routinely lose.</p>
+
+    <div class="stat-strip">
+      <div class="stat"><span class="num">5</span><span class="label">Sessions</span></div>
+      <div class="stat"><span class="num">2h 45m</span><span class="label">Total Duration</span></div>
+      <div class="stat"><span class="num">6</span><span class="label">Languages</span></div>
+      <div class="stat"><span class="num">4</span><span class="label">Scripts, One Framework</span></div>
+    </div>
+
+    <p class="byline">Organized by <strong>Arnab Bhattacharya</strong> (IIT Kanpur), <strong>Hrishikesh Terdalkar</strong> (IIIT Hyderabad), <strong>Chaitali Dangarikar</strong> (IIT Kanpur), <strong>Pramit Bhattacharyya</strong> (IIT Kanpur), and <strong>Karthika N J</strong> (IIT Bombay)</p>
+  </div>
+</header>
+
+<main>
+
+<section id="motivation">
+  <div class="container content-col">
+    <p class="eyebrow">Motivation</p>
+    <h2>Why Indian languages need a grammar-aware layer</h2>
+    <div class="section-lede measure">
+      <p>Progress in multilingual large language models, machine translation, and cross-lingual NLP has created a pressing need for high-quality Indian language resources. Initiatives such as Universal Dependencies, the IIIT&#8209;Hyderabad/LTRC annotation framework, and language-specific corpora have made considerable progress — yet several characteristic features of Indian languages remain difficult to capture uniformly, and their underlying unity is often overlooked.</p>
+      <p>Indian languages exhibit rich morphology, agglutinative structure, productive participial formations, complex verbal systems, evidential and reportative markers, honorific distinctions, relative&#8209;correlative constructions, and grammar-driven semantic relations described in detail within the Indian grammatical tradition. These phenomena are frequently simplified or normalized during corpus creation, tokenization, annotation, and translation — leading to information loss and reduced linguistic fidelity.</p>
+      <p>The <strong>Samanvaya</strong> initiative addresses these concerns through a unified grammar-aware framework for creating and annotating multilingual corpora in Indian languages. It adds a layer that preserves language-specific grammatical information for computational use. This tutorial explains the Samanvaya tagging system for grammar-aware resource creation and its relevance to future Indian language NLP systems.</p>
+    </div>
+    <p class="drop-cite">Dangarikar, C., Bhattacharya, A., N J, K., Terdalkar, H., Bhattacharyya, P., Kulkarni, A., Lakkundi, C. S., Ramakrishnan, G., &amp; V, S. (2024). <em>Samanvaya: An Interlingua for Unity of Indian Languages.</em> Central Sanskrit University.</p>
+  </div>
+</section>
+
+<section id="fit">
+  <div class="container content-col">
+    <p class="eyebrow">Relevance</p>
+    <h2>Why this tutorial fits ICON 2026</h2>
+    <div class="section-lede measure">
+      <p>ICON has long been the leading forum for NLP research on Indian languages. As the field moves toward multilingual foundation models, agentic systems, and LLM-driven NLP, consistent, grammar-aware linguistic resources are increasingly important.</p>
+      <p>This tutorial addresses questions central to that shift: how parallel corpora can preserve grammatical features across Indian languages; whether tokenization can be standardized across agglutinative and non-agglutinative languages; how annotation frameworks can better capture phenomena unique to Indian languages; what role traditional Indian grammatical knowledge can play in enhancing AI models; and how linguistically informed resources can advance machine translation, parsing, and multilingual LLMs. Its goal is to foster collaboration among linguists, NLP researchers, corpus developers, and AI practitioners toward shared community standards for grammar-aware Indian language resources.</p>
+    </div>
+    <div class="mt-3">
+      <span class="track-badge">Language Resources &amp; Evaluation</span>
+      <span class="track-badge">Morphology &amp; Word Segmentation</span>
+      <span class="track-badge">Syntax &amp; Semantics</span>
+      <span class="track-badge">Multilinguality &amp; Language Diversity</span>
+    </div>
+  </div>
+</section>
+
+<section id="sessions">
+  <div class="container content-col">
+    <p class="eyebrow">Tutorial Overview</p>
+    <h2>Five sessions, one interlingual framework</h2>
+    <p class="section-lede measure">Participants are introduced to Samanvaya's conceptual foundations, tokenization strategies for morphologically rich languages, lexical, morphological, and syntactic annotation schemes, and its emerging interplay with large language models. The tagset currently covers Sanskrit, Kannada, Bangla, Marathi, Malayalam, and Hindi, with conventions to extend to other Indian languages.</p>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="session-card">
+          <span class="session-no">01</span>
+          <div class="session-dur">45 min</div>
+          <h3>Motivation for the Samanvaya Framework: A Unified Interlingua for Indian Languages</h3>
+          <p>The need for a common interlingual representation for multilingual Indian&#8209;language NLP; Samanvaya's complementarity with Universal Dependencies and the LTRC tagset; limitations of existing schemes in representing language&#8209;specific phenomena; an overview of applications in multilingual NLP and AI.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="session-card">
+          <span class="session-no">02</span>
+          <div class="session-dur">30 min</div>
+          <h3>Tokenization and Word Grouping for Indian Languages</h3>
+          <p>Why whitespace-based tokenization misses relevant grammatical units, and how grammar-aware word grouping addresses this — canonical tokenization, compound predicates, auxiliary and modal verb chains, correspondence between agglutinative and non-agglutinative languages, and cross-lingual token alignment.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="session-card">
+          <span class="session-no">03</span>
+          <div class="session-dur">30 min</div>
+          <h3>Lexical and Morphological Annotation using Samanvaya</h3>
+          <p>Token types and stem representation, and native grammar-aware morphological categories — TAM (tense, aspect, mood), PNG (person, number, gender), case marking, respect and honorification, inclusivity, negation, evidentiality, emphasis, classifiers, and clitic-fused dependency information in agglutinative languages.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="session-card">
+          <span class="session-no">04</span>
+          <div class="session-dur">30 min</div>
+          <h3>Dependency and Sentence-Level Annotation using Samanvaya</h3>
+          <p>Syntactic annotation beyond conventional dependency parsing — <em>kāraka</em> and non-<em>kāraka</em> relations, coordination, relative&#8209;correlative and comparative constructions, conditional and causal clauses, quotative structures, copular and verbless sentences, and finite/non-finite constructions.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="session-card">
+          <span class="session-no">05</span>
+          <div class="session-dur">30 min</div>
+          <h3>Samanvaya and Large Language Models</h3>
+          <p>The two-way relationship between Samanvaya and LLMs — few-shot prompting for candidate tags, Samanvaya-tagged corpora as structured supervision for tokenization and <em>kāraka</em>-consistent argument structure, evaluating LLM-generated annotations against gold-standard data, and open questions in grammatically faithful generation.</p>
+        </div>
+      </div>
+    </div>
+    <p class="session-total">Running time: 2 hours 45 minutes (2.5&ndash;3 hour slot).</p>
+  </div>
+</section>
+
+<section id="languages">
+  <div class="container content-col">
+    <p class="eyebrow">Coverage</p>
+    <h2>One tagset, four scripts, six languages</h2>
+    <p class="section-lede measure">The Samanvaya tagset is developed and validated across Sanskrit, Hindi, Marathi, Bangla, Kannada, and Malayalam — spanning four scripts — with conventions designed to extend to further Indian languages.</p>
+
+    <div class="lang-grid">
+      <div class="lang-tile">
+        <span class="script deva">समन्वय</span>
+        <span class="langs">Sanskrit &middot; Hindi &middot; Marathi</span>
+      </div>
+      <div class="lang-tile">
+        <span class="script beng">সমন্বয়</span>
+        <span class="langs">Bangla</span>
+      </div>
+      <div class="lang-tile">
+        <span class="script kan">ಸಮನ್ವಯ</span>
+        <span class="langs">Kannada</span>
+      </div>
+      <div class="lang-tile">
+        <span class="script mal">സമന്വയം</span>
+        <span class="langs">Malayalam</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="organizers">
+  <div class="container content-col">
+    <p class="eyebrow">Organizers</p>
+    <h2>Who's behind Samanvaya</h2>
+    <p class="section-lede measure">A team spanning computer science and linguistics across multiple institutions.</p>
+
+    <p class="sub-label">Tutorial Presenters &mdash;</p>
+    <div class="row g-3">
+      <div class="col-sm-6 col-lg-4">
+        <div class="org-card">
+          <h3>Prof. Arnab Bhattacharya</h3>
+          <span class="affil">Professor, CSE &middot; IIT Kanpur</span>
+          <div class="links">
+            <a href="https://www.cse.iitk.ac.in/users/arnabb/" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <div class="org-card">
+          <h3>Dr. Hrishikesh Terdalkar</h3>
+          <span class="affil">Assistant Professor, LTRC &middot; IIIT Hyderabad</span>
+          <div class="links">
+            <a href="https://hrishikeshrt.github.io/" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <div class="org-card">
+          <h3>Dr. Chaitali Dangarikar</h3>
+          <span class="affil">Senior Researcher, Center for IKS &middot; IIT Kanpur</span>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/chaitali-dangarikar-a3505623a" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <div class="org-card">
+          <h3>Dr. Pramit Bhattacharyya</h3>
+          <span class="affil">Assistant Professor, CSIS &middot; BITS Pilani Hyderabad Campus</span>
+          <div class="links">
+            <a href="https://github.com/Pramit18142" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <div class="org-card">
+          <h3>Karthika N J</h3>
+          <span class="affil">PhD Scholar, CSE &middot; IIT Bombay</span>
+          <div class="links">
+            <a href="https://sites.google.com/view/karthika-nj/home" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contributors-sub">
+      <p class="sub-label">Also behind Samanvaya &mdash;</p>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Dr. Shubhangi Agarwal</span>
+          <span class="affil">IIT Kanpur</span>
+          <div class="links">
+            <a href="https://shubhangiat.github.io" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Prof. Ganesh Ramakrishnan</span>
+          <span class="affil">IIT Bombay</span>
+          <div class="links">
+            <a href="https://www.cse.iitb.ac.in/~ganesh/" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Ramamurthy S</span>
+          <span class="affil">IIT Kanpur</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Chethana K L</span>
+          <span class="affil">IIT Kanpur</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Annarao Kulkarni</span>
+          <span class="affil">CDAC Bengaluru</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Prof. Pawan Goyal</span>
+          <span class="affil">IIT Kharagpur</span>
+          <div class="links">
+            <a href="https://cse.iitkgp.ac.in/~pawang/" target="_blank" rel="noopener">Profile ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Dr. Shivani V</span>
+          <span class="affil">Karnataka Sanskrit University</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="contributor-card">
+          <span class="name">Chaitanya Lakkundi</span>
+          <span class="affil">Karnataka Sanskrit University</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container content-col">
+    <p class="eyebrow" style="color: var(--gold);">Citation</p>
+    <p class="drop-cite">Dangarikar, C., Bhattacharya, A., N J, K., Terdalkar, H., Bhattacharyya, P., Kulkarni, A., Lakkundi, C. S., Ramakrishnan, G., &amp; V, S. (2024). <em>Samanvaya: An Interlingua for Unity of Indian Languages.</em> Central Sanskrit University, India. ISBN 978&#8209;93&#8209;48435&#8209;21&#8209;7.</p>
+    <p class="foot-tracks">A tutorial at ICON 2026 — Language Resources &amp; Evaluation &middot; Morphology &amp; Word Segmentation &middot; Syntax &amp; Semantics &middot; Multilinguality &amp; Language Diversity tracks.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
